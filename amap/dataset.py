@@ -132,18 +132,16 @@ class TestDataset(Dataset):
 
         self.img_fls = []
         self.per_img = []
-        for base, _, files in os.walk(imgs_dir):
-            base = base[len(imgs_dir):]
-            files = list(filter(lambda x: re.match(r'(.+).(tiff|tif)', x), files))
-            for file in files:
-                fn = os.path.join(base, file)
-                self.img_fls.append(fn)
-                sh = tifffile.imread(os.path.join(imgs_dir, fn)).shape
-                res = get_resolution(os.path.join(imgs_dir, fn), sh[-1])
-                scale = round(res / TARGET_RES, 2)
-                sh = sh[-1] * scale
-                steps_per_axis = int((sh - d) // self.step + 1)
-                self.per_img.append(steps_per_axis ** 2)
+        files = os.listdir(imgs_dir)
+        files = list(filter(lambda x: re.match(r'(.+).(tiff|tif)', x), files))
+        for fn in files:
+            self.img_fls.append(fn)
+            sh = tifffile.imread(os.path.join(imgs_dir,fn)).shape
+            res = get_resolution(os.path.join(imgs_dir,fn), sh[-1])
+            scale = round(res / TARGET_RES, 2)
+            sh = sh[-1] * scale
+            steps_per_axis = int((sh - d) // self.step + 1)
+            self.per_img.append(steps_per_axis ** 2)
 
         self.imgs = {}
         self.per_img_cumsum = np.cumsum(self.per_img)
