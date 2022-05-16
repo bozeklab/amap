@@ -7,6 +7,8 @@ import argparse
 import cv2
 from skimage.morphology import skeletonize
 
+########## FOOT PROCESS PARAMETERS ################
+
 def fp_parameters(region, res):
     region = region.astype(np.uint8)
     _, contours, hier = cv2.findContours(region, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -44,7 +46,7 @@ def fp_param_table(img_dr="../samples", pred_dr="../amap_res", out_dr="../amap_r
             f.close()
 
 
-########## ROI ################
+########## ROI ESTIMATION ################
 
 def get_ROI_from_pred(preds, img_sh):
     MIN_AREA = 500
@@ -285,7 +287,7 @@ def combine_FP_SD(param_dr="../amap_res/morphometry"):
 def get_args():
     parser = argparse.ArgumentParser(description='Calculate morphometric parameters ',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-i', '--img_dr', dest='img_dr', type=str, default="../samples",
+    parser.add_argument('-i', '--img_dr', dest='img_dr', type=str, default="../sample_images",
                         help='Original image folder')
     parser.add_argument('-p', '--pred_dr', dest='pred_dr', type=str, default="../amap_res",
                         help='AMAP segmentation results folder')
